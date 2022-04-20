@@ -32,7 +32,8 @@ class MainActivity : AppCompatActivity() {
         navigate=findViewById<Button>(R.id.buttonAdd)
         navigate!!.setOnClickListener {
             val i = Intent(this,AddData::class.java)
-            startActivity(i)
+            startActivityForResult(i,1)
+
         }
 
         initialize()
@@ -86,19 +87,34 @@ class MainActivity : AppCompatActivity() {
         recycler.adapter=adapter
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        if(check==0)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode==1)
         {
-            check=1
-            return
+            if(resultCode== RESULT_OK)
+            {
+                result=database!!.restaurantdao().getRestaurants()
+                adapter= CustomAdapter(result!!)
+                recycler.adapter=adapter
+                Log.d("Meow",result!!.size.toString())
+                //adapter!!.filterlist(result!!)
+            }
         }
-        val temp=result
-        result=database!!.restaurantdao().getRestaurants()
-        if(temp!!.size!=result!!.size) {
-            adapter!!.filterlist(result!!)
-        }
-
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        if(check==0)
+//        {
+//            check=1
+//            return
+//        }
+//        val temp=result
+//        result=database!!.restaurantdao().getRestaurants()
+////        if(temp!!.size!=result!!.size) {
+//            adapter!!.filterlist(result!!)
+//
+////        }
+//
+//    }
 }

@@ -1,5 +1,6 @@
 package com.myapp.assignment3
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ class CustomAdapter(var restaurants:List<Restaurant>):RecyclerView.Adapter<Custo
     }
 
     override fun getItemCount(): Int {
+        Log.d("Meow",restaurants.size.toString())
         return restaurants.size
     }
     fun filterlist(rlist:List<Restaurant>)

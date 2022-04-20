@@ -13,6 +13,7 @@ class AddData : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_data)
         val btn=findViewById<Button>(R.id.buttonInsert)
+        setResult(RESULT_OK)
         btn.setOnClickListener {
             val name=findViewById<EditText>(R.id.restaurant_name).text.toString()
             val location=findViewById<EditText>(R.id.retaurant_location).text.toString()
