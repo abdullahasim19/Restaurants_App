@@ -9,6 +9,8 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     var navigate:Button?=null
     var check:Int=0
     var database:RestaurantDatabase?=null
+    lateinit var fullrestaurants:List<Restaurant>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,21 +41,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         initialize()
-        val searchResult=findViewById<EditText>(R.id.searchBar)
-        searchResult.addTextChangedListener(object :TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        try {
+            val searchResult=findViewById<SearchView>(R.id.searchBar)
+            searchResult.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
 
-            }
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    adapter!!.getFilter().filter(newText)
+                    return true
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            })
+        }
+        catch (ex:Exception)
+        {
+            Toast.makeText(this,ex.message.toString(),Toast.LENGTH_LONG).show()
+        }
 
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                filter(s.toString())
-            }
-
-        })
 
     }
     fun filter(text:String)
@@ -74,14 +82,14 @@ class MainActivity : AppCompatActivity() {
     {
         recycler=findViewById<RecyclerView>(R.id.recycler)
         database=RestaurantDatabase.getDatabase(this)
-
         result=database!!.restaurantdao().getRestaurants()
+        fullrestaurants=result!!.toList()
         setRecyclerview(result!!)
     }
     fun setRecyclerview(result:List<Restaurant>)
     {
 
-        adapter=CustomAdapter(result)
+        adapter=CustomAdapter(result,fullrestaurants)
 
         recycler.layoutManager=LinearLayoutManager(this)
         recycler.adapter=adapter
@@ -93,28 +101,18 @@ class MainActivity : AppCompatActivity() {
         {
             if(resultCode== RESULT_OK)
             {
+
                 result=database!!.restaurantdao().getRestaurants()
-                adapter= CustomAdapter(result!!)
+                if(fullrestaurants.size==result!!.size)
+                    return
+                fullrestaurants=result!!.toList()
+                adapter= CustomAdapter(result!!,fullrestaurants)
                 recycler.adapter=adapter
-                Log.d("Meow",result!!.size.toString())
+                //Log.d("Meow",result!!.size.toString())
                 //adapter!!.filterlist(result!!)
             }
         }
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        if(check==0)
-//        {
-//            check=1
-//            return
-//        }
-//        val temp=result
-//        result=database!!.restaurantdao().getRestaurants()
-////        if(temp!!.size!=result!!.size) {
-//            adapter!!.filterlist(result!!)
-//
-////        }
-//
-//    }
+
 }
