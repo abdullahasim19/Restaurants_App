@@ -99,7 +99,7 @@
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-
+                    android:inputType="number"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -149,7 +149,7 @@
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-
+                    android:inputType="number"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 

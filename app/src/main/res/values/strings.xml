@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Assignment 3</string>
+    <string-array name="filterings">
+        <item>Name</item>
+        <item>Location</item>
+        <item>Phone</item>
+        <item>Description</item>
+        <item>Rating</item>
+    </string-array>
 </resources>

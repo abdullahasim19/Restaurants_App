@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class CustomAdapter(var restaurants:List<Restaurant>,var restaurantsFull: List<Restaurant>):RecyclerView.Adapter<CustomAdapter.ViewHolder>(),Filterable {
 
-
+    var filterType="Name"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view=LayoutInflater.from(parent.context).inflate(R.layout.restaurant_ui,parent,false)
@@ -31,9 +31,10 @@ class CustomAdapter(var restaurants:List<Restaurant>,var restaurantsFull: List<R
        // Log.d("Meow",restaurants.size.toString())
         return restaurants.size
     }
-    fun filterlist(rlist:List<Restaurant>)
+    fun updateView(rlist:List<Restaurant>,fList:List<Restaurant>)
     {
         restaurants=rlist
+        restaurantsFull=fList
         notifyDataSetChanged()
     }
 
@@ -58,10 +59,36 @@ class CustomAdapter(var restaurants:List<Restaurant>,var restaurantsFull: List<R
                 var pattern=constraint.toString().toLowerCase().trim()
                 for (item:Restaurant in restaurantsFull)
                 {
-                    if(item.name.toLowerCase().contains(pattern))
-                    {
-                        tempList.add(item)
+                    if(filterType=="Name") {
+                        if (item.name.toLowerCase().contains(pattern)) {
+                            tempList.add(item)
+                        }
                     }
+                    else if(filterType=="Location")
+                    {
+                        if (item.location.toLowerCase().contains(pattern)) {
+                            tempList.add(item)
+                        }
+                    }
+                    else if(filterType=="Phone")
+                    {
+                        if (item.phone.toLowerCase().contains(pattern)) {
+                            tempList.add(item)
+                        }
+                    }
+                    else if(filterType=="Description")
+                    {
+                        if (item.description.toLowerCase().contains(pattern)) {
+                            tempList.add(item)
+                        }
+                    }
+                    else if(filterType=="Rating")
+                    {
+                        if (item.rating.toLowerCase().contains(pattern)) {
+                            tempList.add(item)
+                        }
+                    }
+
                 }
                 filteredList=tempList.toList()
             }
@@ -80,5 +107,9 @@ class CustomAdapter(var restaurants:List<Restaurant>,var restaurantsFull: List<R
     }
     override fun getFilter(): Filter {
         return restaurantsFilter
+    }
+    fun setSearchType(type:String)
+    {
+        this.filterType=type
     }
 }
