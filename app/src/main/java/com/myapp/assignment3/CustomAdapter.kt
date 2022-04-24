@@ -28,7 +28,6 @@ class CustomAdapter(var restaurants:List<Restaurant>,var restaurantsFull: List<R
     }
 
     override fun getItemCount(): Int {
-       // Log.d("Meow",restaurants.size.toString())
         return restaurants.size
     }
     fun updateView(rlist:List<Restaurant>,fList:List<Restaurant>)

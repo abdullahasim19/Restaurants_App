@@ -4,7 +4,7 @@ import android.accounts.AuthenticatorDescription
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
+//creating table
 @Entity(tableName = "Restaurant")
 class Restaurant(
 

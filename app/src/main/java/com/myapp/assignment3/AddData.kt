@@ -20,6 +20,35 @@ class AddData : AppCompatActivity() {
             val phone=findViewById<EditText>(R.id.restaurant_phone).text.toString()
             val description=findViewById<EditText>(R.id.restaurant_description).text.toString()
             val rating=findViewById<EditText>(R.id.restaurant_rating).text.toString()
+            var flag=0
+            if(name.isEmpty())
+            {
+                Toast.makeText(this,"Please enter Name",Toast.LENGTH_SHORT).show()
+                flag=1
+            }
+            if(location.isEmpty())
+            {
+                Toast.makeText(this,"Please enter Location",Toast.LENGTH_SHORT).show()
+                flag=1
+            }
+            if(phone.isEmpty())
+            {
+                Toast.makeText(this,"Please enter Phone",Toast.LENGTH_SHORT).show()
+                flag=1
+            }
+            if(description.isEmpty())
+            {
+                Toast.makeText(this,"Please enter Description",Toast.LENGTH_SHORT).show()
+                flag=1
+            }
+            if(rating.isEmpty())
+            {
+                Toast.makeText(this,"Please enter Rating",Toast.LENGTH_SHORT).show()
+                flag=1
+            }
+            if(flag==1)
+                return@setOnClickListener
+
 
             try {
                 var database=RestaurantDatabase.getDatabase(this)

@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase
 abstract class RestaurantDatabase:RoomDatabase() {
 
     abstract fun restaurantdao():RestaurantDAO
-
+    //singleton
     companion object{
         @Volatile
         private var INSTANCE:RestaurantDatabase?=null

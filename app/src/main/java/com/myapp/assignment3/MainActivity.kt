@@ -38,50 +38,30 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(i,1)
 
         }
-
         initialize()
-        try {
-            val searchResult=findViewById<SearchView>(R.id.searchBar)
-            searchResult.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    adapter!!.getFilter().filter(newText)
-                    return true
-                }
-
-            })
-        }
-        catch (ex:Exception)
-        {
-            Toast.makeText(this,ex.message.toString(),Toast.LENGTH_LONG).show()
-        }
-
 
     }
-//    fun filter(text:String)
-//    {
-//        if(result==null)
-//            return
-//
-//        var filterArray=ArrayList<Restaurant>()
-//        for (item in result!!)
-//        {
-//            if(item.name.toLowerCase().contains(text.toLowerCase()))
-//            {
-//                filterArray.add(item)
-//            }
-//        }
-//        var filterlist=filterArray.toList()
-//        adapter!!.filterlist(filterlist)
-//    }
-    fun initialize()
+
+    private fun deleteAllRestaurants()
     {
-        recycler=findViewById<RecyclerView>(R.id.recycler)
-        spinnerFilter=findViewById<Spinner>(R.id.spinnerFilter)
-        var arr=ArrayAdapter.createFromResource(this,R.array.filterings,android.R.layout.simple_spinner_item)
+        database=RestaurantDatabase.getDatabase(this)
+        var id:Long=1
+        result=database!!.restaurantdao().getRestaurants()
+
+        for (item:Restaurant in result!!)
+        {
+            var temp=item
+            item.setid(id)
+            database!!.restaurantdao().deleteRestaurant(temp)
+            id++
+        }
+    }
+    private fun initialize()
+    {
+        recycler=findViewById<RecyclerView>(R.id.recycler)//recycler view
+        spinnerFilter=findViewById<Spinner>(R.id.spinnerFilter)//spinner
+        var arr=ArrayAdapter.createFromResource(
+            this,R.array.filterings,android.R.layout.simple_spinner_item)//setting array adapter for spinner
         arr.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerFilter.adapter=arr
         spinnerFilter.setOnItemSelectedListener(object :AdapterView.OnItemSelectedListener{
@@ -102,18 +82,32 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-        database=RestaurantDatabase.getDatabase(this)
-        result=database!!.restaurantdao().getRestaurants()
-        fullrestaurants=result!!.toList()
-        setRecyclerview(result!!)
-    }
-    fun setRecyclerview(result:List<Restaurant>)
-    {
+        database=RestaurantDatabase.getDatabase(this)//getting database instance
+        result=database!!.restaurantdao().getRestaurants() //storing the result in result list
+        fullrestaurants=result!!.toList()//making another copy of list
 
-        adapter=CustomAdapter(result,fullrestaurants)
-
+        adapter=CustomAdapter(result!!,fullrestaurants)
         recycler.layoutManager=LinearLayoutManager(this)
         recycler.adapter=adapter
+
+        try {
+            val searchResult=findViewById<SearchView>(R.id.searchBar)
+            searchResult.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    adapter!!.getFilter().filter(newText)
+                    return true
+                }
+
+            })
+        }
+        catch (ex:Exception)
+        {
+            Toast.makeText(this,ex.message.toString(),Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -122,19 +116,13 @@ class MainActivity : AppCompatActivity() {
         {
             if(resultCode== RESULT_OK)
             {
-
                 result=database!!.restaurantdao().getRestaurants()
-                if(fullrestaurants.size==result!!.size)
+                if(fullrestaurants.size==result!!.size)//if no item added then simply return
                     return
                 fullrestaurants=result!!.toList()
-                //adapter= CustomAdapter(result!!,fullrestaurants)
                 adapter!!.updateView(result!!,fullrestaurants)
-                //recycler.adapter=adapter
-                //Log.d("Meow",result!!.size.toString())
-                //adapter!!.filterlist(result!!)
             }
         }
     }
-
 
 }
